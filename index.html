@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cổng Thông Tin Dân Sinh & Diễn Đàn Đăng Bài Cộng Đồng | Phục Vụ Nhân Dân</title>
+  <meta name="description" content="Trang tin điện tử đăng bài, phổ biến chính sách, tiếp nhận ý kiến phản ánh dân sinh và đời sống xã hội phục vụ nhân dân." />
+
+  <!-- Google Fonts: Roboto & Merriweather for official news & civic reading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="font-normal theme-red">
+
+  <!-- ==========================================================================
+       TOP BAR: QUỐC HIỆU, TIÊU NGỮ & CÔNG CỤ TRỢ NĂNG CHO BÀ CON NHÂN DÂN
+       ========================================================================== -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-motto">
+        <span class="country-name">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span>
+        <span class="country-motto">Độc lập - Tự do - Hạnh phúc</span>
+      </div>
+
+      <div class="top-tools">
+        <!-- Live Calendar & Clock -->
+        <div class="top-datetime" id="topDateTime">
+          <i class="fa-regular fa-calendar-days"></i>
+          <span id="currentDateText">Đang tải ngày giờ...</span>
+        </div>
+
+        <!-- Text Size Accessibility (Dành cho người cao tuổi) -->
+        <div class="font-size-controls" title="Thay đổi kích cỡ chữ cho dễ đọc">
+          <span class="fs-label">Cỡ chữ:</span>
+          <button class="btn-fs" id="btnFsSmall" title="Chữ nhỏ">A-</button>
+          <button class="btn-fs active" id="btnFsNormal" title="Chữ tiêu chuẩn">A</button>
+          <button class="btn-fs" id="btnFsLarge" title="Chữ to dễ đọc">A+</button>
+        </div>
+
+        <!-- Theme Color Switcher Button -->
+        <button class="btn-theme-toggle" id="openThemeModalBtn" title="Tùy chỉnh màu giao diện">
+          <i class="fa-solid fa-palette"></i>
+          <span>Giao Diện</span>
+        </button>
+
+        <!-- Hotline -->
+        <a href="tel:19001234" class="top-hotline" title="Tổng đài hỗ trợ người dân">
+          <i class="fa-solid fa-phone-volume"></i> Hotline: <strong>1900 1234</strong>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MAIN HEADER: LOGO QUỐC GIA / CỘNG ĐỒNG, TÌM KIẾM & NÚT ĐĂNG BÀI
+       ========================================================================== -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <!-- Portal Brand Logo -->
+      <a href="index.html" class="portal-brand">
+        <div class="brand-emblem">
+          <i class="fa-solid fa-star emblem-star"></i>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">CỔNG THÔNG TIN DÂN SINH</h1>
+          <span class="brand-subtitle">Diễn Đàn Đăng Bài & Tiếp Nhận Ý Kiến Nhân Dân Vì Sự Hài Lòng Của Dân</span>
+        </div>
+      </a>
+
+      <!-- Header Search & Actions -->
+      <div class="header-actions">
+        <!-- Instant Search Box -->
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input 
+            type="text" 
+            id="globalSearchInput" 
+            placeholder="Tìm kiếm chính sách, thủ tục, tin tức dân sinh..." 
+            autocomplete="off"
+          />
+          <button class="search-clear-btn" id="searchClearBtn" title="Xóa tìm kiếm" style="display: none;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- USER AUTHENTICATION / PROFILE -->
+        <div class="header-auth-container" id="headerAuthContainer">
+          <!-- Populated dynamically via JavaScript -->
+        </div>
+
+        <!-- NEW POST BUTTON (NỔI BẬT) -->
+        <button class="btn-action-post" id="btnOpenCreatePost" onclick="requireAuthToPost()" title="Đăng bài viết mới hoặc gửi ý kiến phản ánh">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Đăng Bài Mới</span>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-toggle-btn" id="mobileMenuBtn" aria-label="Mở menu di động">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       NAVIGATION MENU: CHUYÊN MỤC DÂN SINH GẦN GŨI VỚI ĐỜI SỐNG
+       ========================================================================== -->
+  <nav class="main-nav-bar" id="mainNavBar">
+    <div class="container nav-inner">
+      <ul class="nav-list" id="categoriesNavList">
+        <!-- Populated via JavaScript: Tất cả, Chính sách, Phản ánh, Đời sống, Y tế... -->
+      </ul>
+
+      <!-- Filter My Posts Button -->
+      <button class="btn-my-posts" id="btnFilterMyPosts" title="Xem các bài viết tôi đã đăng">
+        <i class="fa-solid fa-user-pen"></i>
+        <span>Bài Của Tôi</span>
+        <span class="my-posts-count" id="myPostsCountBadge">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       BREAKING NEWS MARQUEE (BĂNG THÔNG BÁO KHẨN CẤP & LƯU Ý DÂN SINH)
+       ========================================================================== -->
+  <div class="breaking-news-bar">
+    <div class="container breaking-inner">
+      <div class="breaking-label">
+        <i class="fa-solid fa-bullhorn"></i> THÔNG BÁO DÂN SINH:
+      </div>
+      <div class="breaking-marquee">
+        <div class="marquee-content" id="marqueeText">
+          📌 Lịch chi trả lương hưu và trợ cấp BHXH tháng 11 qua tài khoản cá nhân từ ngày 03 đến 05 hàng tháng | 
+          💉 Lịch tiêm chủng mở rộng miễn phí cho trẻ em tại các Trạm Y tế xã/phường từ ngày 08 - 10/11 | 
+          📢 Bà con cảnh giác tuyệt đối không cung cấp mã OTP ngân hàng cho số lạ xưng danh cơ quan chức năng | 
+          📝 Đã mở kênh tiếp nhận phản ánh trực tuyến của nhân dân về vệ sinh môi trường và giao thông cơ sở.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       DIRECT ON-PAGE POSTING CARD (KHUNG ĐĂNG BÀI TRỰC TIẾP TRÊN TRANG CHỦ)
+       ========================================================================== -->
+  <section class="quick-post-section">
+    <div class="container">
+      <div class="quick-post-card">
+        <div class="quick-post-header">
+          <div class="qp-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="qp-prompt-box" onclick="requireAuthToPost()">
+            <span class="qp-placeholder">✍️ Bà con muốn đăng bài chia sẻ tin tức hoặc gửi ý kiến phản ánh gì hôm nay? Bấm vào đây để viết bài...</span>
+          </div>
+          <button class="btn-quick-submit" onclick="requireAuthToPost()">
+            <i class="fa-solid fa-pen-nib"></i> Đăng Bài Ngay
+          </button>
+        </div>
+        <div class="quick-post-actions-bar">
+          <button class="qp-action-btn" onclick="requireAuthToPost('chinh-sach')">
+            <i class="fa-solid fa-landmark" style="color: #0d47a1;"></i> Hướng Dẫn Thủ Tục
+          </button>
+          <button class="qp-action-btn" onclick="requireAuthToPost('phan-anh')">
+            <i class="fa-solid fa-bullhorn" style="color: #b45309;"></i> Gửi Phản Ánh Dân Sinh
+          </button>
+          <button class="qp-action-btn" onclick="requireAuthToPost('doi-song')">
+            <i class="fa-solid fa-seedling" style="color: #15803d;"></i> Đời Sống & Nông Nghiệp
+          </button>
+          <button class="qp-action-btn" onclick="requireAuthToPost('y-te')">
+            <i class="fa-solid fa-heart-pulse" style="color: #be123c;"></i> Y Tế & Sức Khỏe
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       HERO SPOTLIGHT & QUICK CIVIC STATS (TIÊU ĐIỂM & CHỈ SỐ DÂN SINH)
+       ========================================================================== -->
+  <section class="hero-section">
+    <div class="container hero-layout">
+      <!-- Big Featured Headline Article -->
+      <div class="featured-post-card" id="featuredPostCard">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Side Civic Dashboard & Action Banner -->
+      <div class="civic-side-panel">
+        <!-- Citizen Feedback Quick Box -->
+        <div class="civic-card feedback-promo-card">
+          <div class="card-badge-live"><i class="fa-solid fa-comments"></i> Kênh Lắng Nghe Dân</div>
+          <h3>Gửi Phản Ánh & Ý Kiến Dân Sinh</h3>
+          <p>Bà con phát hiện các vấn đề về đường sá xuống cấp, vệ sinh môi trường, an ninh trật tự hay thủ tục hành chính? Hãy đăng bài phản ánh ngay để cơ quan chức năng tiếp nhận xử lý.</p>
+          <button class="btn-send-feedback" onclick="requireAuthToPost('phan-anh')">
+            <i class="fa-solid fa-paper-plane"></i> Gửi Ý Kiến Phản Ánh
+          </button>
+        </div>
+
+        <!-- Trust Stats Counter -->
+        <div class="civic-stats-grid">
+          <div class="stat-box">
+            <span class="stat-number" id="statTotalPosts">1.250+</span>
+            <span class="stat-title"><i class="fa-solid fa-newspaper"></i> Bài viết dân sinh</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number stat-green">98.6%</span>
+            <span class="stat-title"><i class="fa-solid fa-circle-check"></i> Đã xử lý phản ánh</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number">24.500+</span>
+            <span class="stat-title"><i class="fa-solid fa-users"></i> Lượt bà con truy cập</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MAIN CONTENT: FEED BÀI VIẾT, BỘ LỌC CHUYÊN MỤC & TÌM KIẾM
+       ========================================================================== -->
+  <main class="main-content-section" id="newsSection">
+    <div class="container">
+      
+      <!-- Section Title & Filter Controls Bar -->
+      <div class="section-toolbar">
+        <div class="section-title-wrap">
+          <h2 class="section-title" id="currentSectionTitle">
+            <i class="fa-solid fa-newspaper"></i> Bảng Tin Bài Viết Dân Sinh Mới Nhất
+          </h2>
+          <span class="section-results-count" id="resultsCountText">Hiển thị 8 bài viết</span>
+        </div>
+
+        <div class="toolbar-controls">
+          <!-- Sort dropdown -->
+          <div class="control-group">
+            <label for="sortSelect"><i class="fa-solid fa-arrow-down-wide-short"></i> Sắp xếp:</label>
+            <select id="sortSelect" class="form-select">
+              <option value="newest">Mới nhất</option>
+              <option value="popular">Xem nhiều nhất</option>
+              <option value="likes">Được yêu thích nhất</option>
+            </select>
+          </div>
+
+          <!-- Category dropdown for mobile / quick select -->
+          <div class="control-group">
+            <label for="categoryQuickSelect"><i class="fa-solid fa-filter"></i> Lọc chủ đề:</label>
+            <select id="categoryQuickSelect" class="form-select">
+              <!-- Injected via JavaScript -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN ARTICLES GRID -->
+      <div class="articles-grid" id="articlesGrid">
+        <!-- Injected dynamically via JavaScript -->
+      </div>
+
+      <!-- Empty State (When no articles found) -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <i class="fa-solid fa-folder-open empty-icon"></i>
+        <h3>Không tìm thấy bài viết phù hợp</h3>
+        <p>Bà con có thể thử tìm kiếm bằng từ khóa khác hoặc bấm nút bên dưới để đăng bài viết mới.</p>
+        <button class="btn-action-post" onclick="requireAuthToPost()">
+          <i class="fa-solid fa-pen-to-square"></i> Đăng Bài Viết Ngay
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       CITIZEN FEEDBACK & PUBLIC RESOLUTION BOARD (BẢNG THEO DÕI XỬ LÝ PHẢN ÁNH)
+       ========================================================================== -->
+  <section class="resolution-board-section">
+    <div class="container">
+      <div class="resolution-card">
+        <div class="resolution-header">
+          <div class="res-title">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <h3>Minh Bạch Xử Lý Ý Kiến & Phản Ánh Của Nhân Dân</h3>
+          </div>
+          <span class="res-note">Cập nhật trực tiếp từ hệ thống tiếp nhận cơ sở</span>
+        </div>
+        <div class="resolution-list" id="resolutionList">
+          <!-- Populated from feedback posts -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MODAL 1: FORM ĐĂNG BÀI VIẾT MỚI / GỬI PHẢN ÁNH DÂN SINH
+       ========================================================================== -->
+  <div class="modal-backdrop" id="createPostModal" onclick="handleModalBackdropClick(event, 'createPostModal')">
+    <div class="modal-dialog post-dialog">
+      <div class="modal-header">
+        <div class="mheader-left">
+          <i class="fa-solid fa-pen-nib mheader-icon"></i>
+          <div>
+            <h3 class="modal-title" id="createModalTitle">Đăng Bài Viết / Gửi Ý Kiến Dân Sinh</h3>
+            <span class="modal-subtitle">Bài viết của bạn sẽ được xuất bản công khai phục vụ cộng đồng</span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeCreatePostModal()" title="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="createPostForm" onsubmit="handlePostSubmit(event)" class="modal-body">
+        <!-- Post Type Switcher -->
+        <div class="post-type-selector">
+          <label class="type-radio-btn active">
+            <input type="radio" name="postType" value="tin-tuc" checked onchange="togglePostType(this.value)" />
+            <i class="fa-solid fa-newspaper"></i>
+            <span>Bài viết tin tức / Hướng dẫn</span>
+          </label>
+          <label class="type-radio-btn">
+            <input type="radio" name="postType" value="phan-anh" onchange="togglePostType(this.value)" />
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>Phản ánh & Kiến nghị của dân</span>
+          </label>
+        </div>
+
+        <!-- Title -->
+        <div class="form-group">
+          <label for="postTitle" class="form-label required">Tiêu đề bài viết:</label>
+          <input 
+            type="text" 
+            id="postTitle" 
+            class="form-control" 
+            placeholder="Ví dụ: Hướng dẫn làm thẻ BHYT học sinh; Phản ánh sửa chữa đường xóm 2..." 
+            required 
+            maxlength="200"
+          />
+        </div>
+
+        <div class="form-row-2">
+          <!-- Category -->
+          <div class="form-group">
+            <label for="postCategory" class="form-label required">Chuyên mục:</label>
+            <select id="postCategory" class="form-control" required>
+              <option value="chinh-sach">Chính Sách & Thủ Tục</option>
+              <option value="phan-anh">Phản Ánh Dân Sinh</option>
+              <option value="doi-song">Đời Sống & Nông Nghiệp</option>
+              <option value="y-te">Y Tế & Sức Khỏe</option>
+              <option value="an-ninh">An Ninh & Pháp Luật</option>
+            </select>
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <label for="postLocation" class="form-label required">Địa phương / Khu vực:</label>
+            <input 
+              type="text" 
+              id="postLocation" 
+              class="form-control" 
+              placeholder="Ví dụ: Phường Dịch Vọng, Cầu Giấy, Hà Nội..." 
+              required 
+            />
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <!-- Author Name -->
+          <div class="form-group">
+            <label for="postAuthor" class="form-label required">Họ và tên người đăng:</label>
+            <input 
+              type="text" 
+              id="postAuthor" 
+              class="form-control" 
+              placeholder="Ví dụ: Nguyễn Văn A hoặc Tổ dân phố số 5" 
+              required 
+            />
+          </div>
+
+          <!-- Author Role -->
+          <div class="form-group">
+            <label for="postRole" class="form-label">Vai trò / Chức danh:</label>
+            <select id="postRole" class="form-control">
+              <option value="Người dân">Người dân / Công dân</option>
+              <option value="Cán bộ cơ sở">Cán bộ cơ sở / Tổ trưởng dân phố</option>
+              <option value="Cộng tác viên">Cộng tác viên dân sinh</option>
+              <option value="Hội viên Nông dân">Hội viên Nông dân / Phụ nữ</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Post Image Selection -->
+        <div class="form-group">
+          <label class="form-label">Hình ảnh bài viết (Chọn ảnh mẫu hoặc dán link ảnh):</label>
+          <div class="sample-images-grid" id="sampleImagesPicker">
+            <!-- Sample images populated via JS -->
+          </div>
+          <div class="image-custom-url-box">
+            <input 
+              type="url" 
+              id="postCustomImage" 
+              class="form-control" 
+              placeholder="Hoặc dán đường dẫn (URL) ảnh của bạn vào đây..." 
+            />
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="form-group">
+          <label for="postSummary" class="form-label required">Tóm tắt ngắn (1-2 câu):</label>
+          <textarea 
+            id="postSummary" 
+            class="form-control" 
+            rows="2" 
+            placeholder="Tóm tắt ngắn gọn nội dung cốt lõi của bài viết..." 
+            required
+          ></textarea>
+        </div>
+
+        <!-- Content -->
+        <div class="form-group">
+          <label for="postContent" class="form-label required">Nội dung chi tiết bài viết:</label>
+          <textarea 
+            id="postContent" 
+            class="form-control" 
+            rows="7" 
+            placeholder="Nhập nội dung đầy đủ của bài viết hoặc các ý kiến chi tiết phản ánh..." 
+            required
+          ></textarea>
+        </div>
+
+        <!-- Submit & Actions -->
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeCreatePostModal()">
+            Hủy Bỏ
+          </button>
+          <button type="submit" class="btn-submit-post">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Xuất Bản Bài Viết Ngay
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: ĐỌC CHI TIẾT BÀI VIẾT (ARTICLE READER MODAL)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="articleReaderModal" onclick="handleModalBackdropClick(event, 'articleReaderModal')">
+    <div class="modal-dialog reader-dialog">
+      <div class="reader-toolbar">
+        <div class="reader-left-tools">
+          <button class="btn-reader-tool" onclick="adjustReaderFont(-1)" title="Giảm cỡ chữ">
+            <i class="fa-solid fa-font"></i> -
+          </button>
+          <button class="btn-reader-tool" onclick="adjustReaderFont(1)" title="Tăng cỡ chữ">
+            <i class="fa-solid fa-font"></i> +
+          </button>
+          <button class="btn-reader-tool" onclick="window.print()" title="In bài viết ra giấy">
+            <i class="fa-solid fa-print"></i> In bài
+          </button>
+        </div>
+        <button class="modal-close" onclick="closeArticleReaderModal()" title="Đóng bài đọc">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="reader-body" id="articleReaderBody">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: TÙY CHỈNH GIAO DIỆN & TRỢ NĂNG (THEME & ACCESSIBILITY)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="themeModal" onclick="handleModalBackdropClick(event, 'themeModal')">
+    <div class="modal-dialog theme-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-palette"></i> Tùy Chỉnh Màu Giao Diện Phù Hợp</h3>
+        <button class="modal-close" onclick="closeThemeModal()" title="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="theme-desc">Lựa chọn tông màu sắc phù hợp với sở thích hoặc nhu cầu thị giác của bà con nhân dân:</p>
+
+        <div class="theme-palette-grid">
+          <!-- Theme 1: Red National Flag (Mặc định) -->
+          <div class="theme-choice-card active" data-theme="theme-red" onclick="selectTheme('theme-red')">
+            <div class="theme-swatch swatch-red"></div>
+            <div class="theme-info">
+              <strong>Đỏ Cờ & Vàng Hoa Sen (Mặc định)</strong>
+              <span>Trang trọng, ấm áp, đúng bản sắc Cổng Thông Tin Nhân Dân</span>
+            </div>
+          </div>
+
+          <!-- Theme 2: Administrative Blue -->
+          <div class="theme-choice-card" data-theme="theme-blue" onclick="selectTheme('theme-blue')">
+            <div class="theme-swatch swatch-blue"></div>
+            <div class="theme-info">
+              <strong>Xanh Dương Hành Chính Công</strong>
+              <span>Hiện đại, tin cậy, chuẩn màu Cổng Dịch Vụ Công Quốc Gia</span>
+            </div>
+          </div>
+
+          <!-- Theme 3: Rural Green -->
+          <div class="theme-choice-card" data-theme="theme-green" onclick="selectTheme('theme-green')">
+            <div class="theme-swatch swatch-green"></div>
+            <div class="theme-info">
+              <strong>Xanh Lá Nông Thôn Mới</strong>
+              <span>Gần gũi bà con nông dân, môi trường sinh thái trong lành</span>
+            </div>
+          </div>
+
+          <!-- Theme 4: High Contrast Accessibility -->
+          <div class="theme-choice-card" data-theme="theme-contrast" onclick="selectTheme('theme-contrast')">
+            <div class="theme-swatch swatch-contrast"></div>
+            <div class="theme-info">
+              <strong>Tương Phản Cao (Dành Cho Người Lớn Tuổi)</strong>
+              <span>Chữ đen đậm rõ nét trên nền sáng, dễ đọc nhất</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: AUTHENTICATION (ĐĂNG NHẬP / ĐĂNG KÝ TÀI KHOẢN CÔNG DÂN)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="authModal" onclick="handleModalBackdropClick(event, 'authModal')">
+    <div class="modal-dialog auth-dialog">
+      <div class="modal-header">
+        <div class="mheader-left">
+          <i class="fa-solid fa-id-card mheader-icon"></i>
+          <div>
+            <h3 class="modal-title" id="authModalTitle">Xác Thực Danh Tính Công Dân</h3>
+            <span class="modal-subtitle">Đăng nhập hoặc đăng ký tài khoản để xuất bản bài viết và gửi phản ánh</span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeAuthModal()" title="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body auth-modal-body">
+        <!-- Auth Tabs Switcher -->
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">
+            <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+          </button>
+          <button type="button" class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">
+            <i class="fa-solid fa-user-plus"></i> Đăng Ký Mới
+          </button>
+        </div>
+
+        <!-- FORM 1: ĐĂNG NHẬP -->
+        <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="auth-form-panel">
+          <div class="auth-banner-notice">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Để bảo đảm tính xác thực và trách nhiệm của bài đăng dân sinh, bà con vui lòng đăng nhập trước khi gửi bài.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="loginIdentifier" class="form-label required">Số điện thoại hoặc Căn cước công dân (CCCD):</label>
+            <input 
+              type="text" 
+              id="loginIdentifier" 
+              class="form-control" 
+              placeholder="Nhập số điện thoại hoặc số CCCD..." 
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword" class="form-label required">Mật khẩu:</label>
+            <input 
+              type="password" 
+              id="loginPassword" 
+              class="form-control" 
+              placeholder="Nhập mật khẩu của bạn..." 
+              required 
+            />
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; font-size: 0.85rem;">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text-secondary);">
+              <input type="checkbox" id="rememberMe" checked /> Ghi nhớ đăng nhập
+            </label>
+            <a href="javascript:void(0)" onclick="quickDemoLogin('citizen')" style="color: var(--primary-color); font-weight: 600;">
+              Quên mật khẩu?
+            </a>
+          </div>
+
+          <button type="submit" class="btn-submit-post" style="width: 100%; justify-content: center;">
+            <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập Tài Khoản
+          </button>
+
+          <!-- 1-Click Demo Accounts for Easy Testing -->
+          <div class="demo-accounts-box">
+            <span class="demo-title"><i class="fa-solid fa-bolt"></i> Hoặc đăng nhập nhanh bằng tài khoản mẫu:</span>
+            <div class="demo-btn-row">
+              <button type="button" class="btn-demo-account" onclick="quickDemoLogin('citizen')">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                  <strong>Công Dân: Bác Nguyễn Văn An</strong>
+                  <small>Phường Dịch Vọng, Cầu Giấy, Hà Nội</small>
+                </div>
+              </button>
+              <button type="button" class="btn-demo-account" onclick="quickDemoLogin('official')">
+                <i class="fa-solid fa-building-flag"></i>
+                <div>
+                  <strong>Cán Bộ: Đ/c Trần Thị Mai</strong>
+                  <small>Cán bộ cơ sở - Xã Đồng Tâm</small>
+                </div>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- FORM 2: ĐĂNG KÝ TÀI KHOẢN MỚI -->
+        <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="auth-form-panel" style="display: none;">
+          <div class="auth-banner-notice">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Tạo tài khoản công dân để đăng bài viết, theo dõi phản ánh và tương tác xây dựng cộng đồng dân cư.</span>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="regFullName" class="form-label required">Họ và tên đầy đủ:</label>
+              <input 
+                type="text" 
+                id="regFullName" 
+                class="form-control" 
+                placeholder="Ví dụ: Nguyễn Văn A" 
+                required 
+              />
+            </div>
+            <div class="form-group">
+              <label for="regPhone" class="form-label required">Số điện thoại:</label>
+              <input 
+                type="tel" 
+                id="regPhone" 
+                class="form-control" 
+                placeholder="Ví dụ: 0912 345 678" 
+                required 
+              />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="regRole" class="form-label required">Vai trò / Thành phần:</label>
+              <select id="regRole" class="form-control" required>
+                <option value="Người dân">Người dân / Công dân</option>
+                <option value="Cán bộ cơ sở">Cán bộ cơ sở / Tổ trưởng dân phố</option>
+                <option value="Hội viên Nông dân">Hội viên Nông dân</option>
+                <option value="Cộng tác viên">Cộng tác viên dân sinh</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="regLocation" class="form-label required">Địa phương cư trú:</label>
+              <input 
+                type="text" 
+                id="regLocation" 
+                class="form-control" 
+                placeholder="Ví dụ: Phường Dịch Vọng, Cầu Giấy, Hà Nội" 
+                required 
+              />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="regPassword" class="form-label required">Mật khẩu:</label>
+              <input 
+                type="password" 
+                id="regPassword" 
+                class="form-control" 
+                placeholder="Tối thiểu 6 ký tự..." 
+                required 
+                minlength="6" 
+              />
+            </div>
+            <div class="form-group">
+              <label for="regConfirmPassword" class="form-label required">Xác nhận mật khẩu:</label>
+              <input 
+                type="password" 
+                id="regConfirmPassword" 
+                class="form-control" 
+                placeholder="Nhập lại mật khẩu..." 
+                required 
+                minlength="6" 
+              />
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px; font-size: 0.85rem; color: var(--text-secondary);">
+            <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+              <input type="checkbox" required style="margin-top: 3px;" />
+              <span>Tôi cam kết thông tin khai báo là trung thực và tuân thủ các quy định văn hóa ứng xử trên không gian mạng.</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit-post" style="width: 100%; justify-content: center;">
+            <i class="fa-solid fa-user-check"></i> Hoàn Tất Đăng Ký Tài Khoản
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ==========================================================================
+       FOOTER: CHUẨN CỔNG THÔNG TIN ĐIỆN TỬ DÂN SINH PHỤC VỤ NHÂN DÂN
+       ========================================================================== -->
+  <footer class="main-footer">
+    <div class="footer-top">
+      <div class="container footer-grid">
+        <!-- Col 1: About Portal -->
+        <div class="footer-col">
+          <div class="footer-brand">
+            <i class="fa-solid fa-star emblem-star"></i>
+            <div>
+              <h4>CỔNG THÔNG TIN DÂN SINH</h4>
+              <span>Hệ thống đăng bài & tiếp nhận phản ánh của nhân dân</span>
+            </div>
+          </div>
+          <p class="footer-desc">
+            Kênh thông tin trực tuyến phục vụ đời sống dân sinh, kết nối tiếng nói của người dân tới chính quyền các cấp; cập nhật chính sách, pháp luật, thủ tục hành chính kịp thời và minh bạch.
+          </p>
+          <div class="footer-motto">
+            <i class="fa-solid fa-heart" style="color: #c00;"></i> <em>"Lấy sự hài lòng của Nhân dân làm thước đo phục vụ"</em>
+          </div>
+        </div>
+
+        <!-- Col 2: Useful Citizen Links -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Chuyên Mục Dân Sinh</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="filterByCategory('chinh-sach')"><i class="fa-solid fa-chevron-right"></i> Chính sách & Thủ tục công</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCategory('phan-anh')"><i class="fa-solid fa-chevron-right"></i> Phản ánh & Kiến nghị của dân</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCategory('doi-song')"><i class="fa-solid fa-chevron-right"></i> Đời sống & Nông nghiệp sạch</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCategory('y-te')"><i class="fa-solid fa-chevron-right"></i> Lịch tiêm chủng & Sức khỏe</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCategory('an-ninh')"><i class="fa-solid fa-chevron-right"></i> An ninh trật tự & Cảnh báo</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Public Services -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Liên Kết Dịch Vụ Công</h4>
+          <ul class="footer-links">
+            <li><a href="https://dichvucong.gov.vn" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Cổng Dịch Vụ Công Quốc Gia</a></li>
+            <li><a href="https://baohiemxahoi.gov.vn" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Bảo Hiểm Xã Hội Việt Nam</a></li>
+            <li><a href="https://chinhphu.vn" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Cổng Thông Tin Điện Tử Chính Phủ</a></li>
+            <li><a href="javascript:void(0)" onclick="requireAuthToPost('phan-anh')"><i class="fa-solid fa-bullhorn"></i> Hộp thư góp ý của bà con</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Contact & Hotlines -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Đường Dây Nóng Hỗ Trợ</h4>
+          <div class="hotline-box">
+            <div class="hotline-item">
+              <span class="hl-name">Tổng đài Dân sinh:</span>
+              <a href="tel:19001234" class="hl-number">1900 1234</a>
+            </div>
+            <div class="hotline-item">
+              <span class="hl-name">Đường dây nóng An ninh:</span>
+              <a href="tel:113" class="hl-number">113</a>
+            </div>
+            <div class="hotline-item">
+              <span class="hl-name">Cấp cứu Y tế:</span>
+              <a href="tel:115" class="hl-number">115</a>
+            </div>
+          </div>
+          <div class="footer-email">
+            <i class="fa-solid fa-envelope"></i> Thư điện tử: bandientu@dansinh.gov.vn
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <div>
+          © 2026 Cổng Thông Tin Dân Sinh & Diễn Đàn Đăng Bài Cộng Đồng.
+        </div>
+        <div class="footer-badges">
+          <span class="badge-seal"><i class="fa-solid fa-shield-halved"></i> Thông tin chính thống & Kiểm duyệt minh bạch</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="posts-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
